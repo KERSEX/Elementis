@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Elementis</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="vignette"></div>
+  <div id="dmg"></div>
+  <div id="prompts"></div>
+  <div id="hud" hidden>
+    <div id="hud-local"></div>
+    <div id="hud-remote"></div>
+    <div id="boss" hidden><div class="boss-name"></div><div class="bar"><i></i></div></div>
+    <div id="netinfo"></div>
+    <div id="join-hint"></div>
+  </div>
+  <div id="toasts"></div>
+  <div id="screens"></div>
+  <div id="loading">Elementis lädt …</div>
+  <script>
+    // Läuft auch, wenn die Module scheitern: zeigt Fehler sichtbar an und meldet sie an den Server
+    (function () {
+      var LINUX = /Linux|X11|Wayland/i.test(navigator.userAgent) && !/Android/i.test(navigator.userAgent);
+      var HINT = 'So bekommst du WebGL: In Firefox/LibreWolf about:config öffnen → webgl.disabled = false und webgl.force-enabled = true setzen, ' +
+        'dann Browser neu starten. ' +
+        (LINUX
+          ? 'Unter Linux braucht Firefox Mesa-Treiber mit 3D (Test im Terminal: glxinfo -B). Bei Firefox aus Flatpak oder Snap fehlt oft der Zugriff auf die Grafikkarte – dann das normale Paket aus der Distribution nehmen. about:support zeigt unter „Grafik“ den genauen Grund.'
+          : 'Außerdem: Einstellungen → Allgemein → Leistung → „Empfohlene Leistungseinstellungen“ abwählen und „Hardwarebeschleunigung verwenden“ anhaken.') +
+        ' Chrome, Chromium und Edge laufen meist ohne Zusatzschritte.';
+      function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+      function report(text) { try { fetch('/api/clientlog', { method: 'POST', body: String(text).slice(0, 2000) }); } catch (e) {} }
+      // "Mir egal": Prüfung überspringen und trotzdem starten. Merkt sich die Wahl im Browser.
+      var force = false;
+      try { force = location.search.indexOf('forcegl=1') >= 0 || localStorage.getItem('elementis.forcegl') === '1'; } catch (e) {}
+      function show(title, msg) {
+        var l = document.getElementById('loading');
+        l.classList.remove('hide');
+        l.innerHTML = '<div class="err"><h2>' + esc(title) + '</h2><p>' + esc(msg) + '</p>'
+          + (window.__pdeFix ? '<p class="fix">' + esc(window.__pdeFix) + '</p>' : '')
+          + '<p class="hint">' + esc(HINT) + '</p>'
+          + '<div class="row-btns">'
+          + (force ? '<button class="btn small" id="gl-off">Grafik-Prüfung wieder einschalten</button>'
+                   : '<button class="btn small" id="gl-force">Trotzdem starten (mir egal)</button>')
+          + '<button class="btn small" id="gl-reload">Neu laden</button></div></div>';
+        var f = document.getElementById('gl-force');
+        if (f) f.onclick = function () {
+          try { localStorage.setItem('elementis.forcegl', '1'); } catch (e) {}
+          location.href = location.pathname + '?forcegl=1';
+        };
+        var o = document.getElementById('gl-off');
+        if (o) o.onclick = function () {
+          try { localStorage.removeItem('elementis.forcegl'); } catch (e) {}
+          location.href = location.pathname;
+        };
+        document.getElementById('gl-reload').onclick = function () { location.reload(); };
+      }
+      window.__pdeFail = function (title, msg) { if (window.__pdeFailed) return; window.__pdeFailed = true; report(title + ': ' + msg); show(title, msg); };
+      window.__pdeReport = report;
+      window.addEventListener('error', function (e) {
+        var t = (e.message || 'Unbekannter Fehler') + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
+        if (window.__pdeReady) report(t); else window.__pdeFail('Das Spiel konnte nicht starten', t);
+      });
+      window.addEventListener('unhandledrejection', function (e) {
+        var t = 'Promise: ' + (e.reason && (e.reason.stack || e.reason.message) || e.reason);
+        if (window.__pdeReady) report(t); else window.__pdeFail('Das Spiel konnte nicht starten', t);
+      });
+      // WebGL prüfen: mehrere Varianten durchgehen und jeden Grund mitschreiben, den der Browser nennt.
+      // ?nogl=1 erzwingt die Fehlermeldung zum Testen.
+      function tryGL(name, opts) {
+        var cv = document.createElement('canvas'), msg = '', ctx = null;
+        cv.addEventListener('webglcontextcreationerror', function (e) { msg = e.statusMessage || ''; }, false);
+        try { ctx = opts ? cv.getContext(name, opts) : cv.getContext(name); } catch (e) { msg = msg || (e && e.message) || 'Ausnahme'; }
+        return { ctx: ctx, msg: msg };
+      }
+      var hasAPI = !!(window.WebGL2RenderingContext || window.WebGLRenderingContext);
+      var soft = { failIfMajorPerformanceCaveat: false, antialias: false, depth: true, powerPreference: 'default' };
+      var attempts = [['webgl2', null], ['webgl2', soft], ['webgl', null], ['webgl', soft], ['experimental-webgl', null]];
+      var gl = null, detail = [];
+      if (location.search.indexOf('nogl=1') < 0) {
+        for (var i = 0; i < attempts.length && !gl; i++) {
+          var t = tryGL(attempts[i][0], attempts[i][1]);
+          if (t.ctx) gl = t.ctx;
+          else detail.push(attempts[i][0] + (attempts[i][1] ? ' (einfach)' : '') + ': ' + (t.msg || 'kein Kontext'));
+        }
+      }
+      window.__pdeForced = force;
+      if (gl) {
+        // Probe-Kontext sofort freigeben: Browser erlauben nur wenige WebGL-Kontexte gleichzeitig
+        try { gl.getExtension('WEBGL_lose_context').loseContext(); } catch (e) {}
+      } else {
+        window.__pdeFix = hasAPI
+          ? 'Der Browser kann WebGL grundsätzlich, bekommt aber keinen Zugriff auf die Grafik (meist gesperrter Treiber). In about:config: webgl.force-enabled = true und gfx.webrender.software = true setzen, dann Browser neu starten.'
+          : 'WebGL ist in diesem Browser ausgeschaltet. In about:config: webgl.disabled = false und webgl.force-enabled = true setzen, dann Browser neu starten.';
+        var reason = (hasAPI ? 'WebGL-Schnittstelle da, aber kein Kontext' : 'WebGL komplett ausgeschaltet')
+          + ' · ' + detail.join(' · ') + ' · ' + navigator.userAgent;
+        report('WebGL fehlt: ' + reason);
+        if (!force) {
+          window.__pdeNoGL = true;
+          window.__pdeFail('3D-Grafik (WebGL) ist in diesem Browser nicht verfügbar', reason);
+        }
+      }
+      setTimeout(function () {
+        if (!window.__pdeReady && !window.__pdeNoGL) window.__pdeFail('Das Spiel lädt nicht', 'Nach 12 Sekunden noch nicht gestartet. ' + navigator.userAgent);
+      }, 12000);
+    })();
+  </script>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

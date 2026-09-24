@@ -1,0 +1,10 @@
+# Python-Umgebung (wird von start.bat neu angelegt)
+venv/
+__pycache__/
+*.pyc
+
+# Editor / System
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
