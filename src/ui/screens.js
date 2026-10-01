@@ -166,7 +166,7 @@ export class Screens {
     const cur = this.currentHeroName();
     this.show(`<div class="panel portal hubpanel">
       <div class="portal-head"><h2>Wolkenfeste</h2><div class="row-btns" style="margin:0">
-        ${pill('💰 ' + s.gold)}${pill('💜 ' + s.soul, s.soul ? 'on' : '')}${pill('🔮 ' + s.crystals, s.crystals ? 'on' : '')}${pill('⭐ ' + totalStars(s) + '/24')}</div></div>
+        ${pill('💰 ' + s.gold)}${pill('💜 ' + s.soul, s.soul ? 'on' : '')}${pill('🔮 ' + s.crystals, s.crystals ? 'on' : '')}${pill('⭐ ' + totalStars(s) + '/36')}</div></div>
       <div class="tabs">${tabs.map(([id, n]) => `<button class="tab ${this.tab === id ? 'on' : ''}" data-act="tab" data-v="${id}">${n}</button>`).join('')}</div>
       <div class="tabbody">${body}</div>
       <div class="row-btns"><span class="hint">Aktiver Held: <b>${esc(cur)}</b> · Q / E wechselt den Reiter</span><span style="flex:1"></span>
@@ -279,7 +279,7 @@ export class Screens {
     const hatsN = Object.keys(HATS).length, trN = Object.keys(TREASURES).length;
     const cats = [
       ['Helden', s.unlocked.length, 20], ['Schurken', s.captured.length, 8], ['Hüte', s.hats.length, hatsN], ['Schätze', s.treasures.length, trN],
-      ['Sterne', totalStars(s), 24], ['Erfolge', s.ach.length, ACHIEVEMENTS.length],
+      ['Sterne', totalStars(s), 36], ['Erfolge', s.ach.length, ACHIEVEMENTS.length],
     ];
     const total = cats.reduce((a, c) => a + c[1], 0), max = cats.reduce((a, c) => a + c[2], 0);
     const pct = Math.round((total / max) * 100);
@@ -355,7 +355,7 @@ export class Screens {
     const rows = r.rows.map(([a, b]) => `<tr><td>${a}</td><td style="text-align:right">${b}</td></tr>`).join('');
     const ch = r.challenges.map((c) => `<b class="${c.done ? 'ok' : ''}" style="${c.done ? '' : 'opacity:.5'}">${c.done ? '★' : '☆'} ${esc(c.text)}${c.isNew ? ' – neu!' : ''}</b>`).join('');
     this.show(`<div class="panel title" style="width:min(560px,94vw)">
-      <h2 style="text-align:center;margin-bottom:0">${r.win ? (r.arena ? 'Arena beendet' : 'Level geschafft!') : 'Erschöpft!'}</h2>
+      <h2 style="text-align:center;margin-bottom:0">${r.arena ? 'Arena beendet' : r.win ? 'Level geschafft!' : 'Erschöpft!'}</h2>
       <p class="sub" style="margin:0 0 6px">${esc(r.title)}</p>
       ${r.arena ? '' : `<div class="stars">${stars}</div><div class="lv-info">${ch}</div>`}
       <table class="res">${rows}</table>

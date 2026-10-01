@@ -36,7 +36,9 @@ export class Game {
     this.applySettings();
     this.touch = null;
     if (isTouchDevice()) { this.touch = setupTouch(this.input, () => this.state === 'play' && this.pause()); this.touch.show(false); this.input.touch.on = true; }
-    document.addEventListener('visibilitychange', () => { if (document.hidden && this.state === 'play') this.pause(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { Save.persist(); if (this.state === 'play') this.pause(); } });
+    window.addEventListener('pagehide', () => Save.persist());
+    setInterval(() => { if (this.state === 'play') Save.persist(); }, 10000);
     const unlock = () => { audio.init(); audio.setVolumes(this.save.settings); this.syncMusic(); };
     window.addEventListener('pointerdown', unlock, { once: false });
     window.addEventListener('keydown', unlock, { once: false });
@@ -190,7 +192,8 @@ export class Game {
     audio.init();
     const s = this.save;
     const heroes = this.buildHeroes();
-    if (this.p2on || (s.p2hero && this.input.p2Active)) { const h2 = this.p2Hero(heroes[0]); if (h2) heroes.push(h2); }
+    const own2 = s.unlocked.concat(s.captured);
+    if (s.p2hero && own2.includes(s.p2hero)) { const h2 = this.p2Hero(heroes[0]); if (h2) { heroes.push(h2); this.input.p2Active = true; } } else this.input.p2Active = false;
     const owned = new Set([...s.treasures, ...s.found, ...s.hats.map((h) => 'hat:' + h)]);
     const hooks = {
       gold: (n) => { s.gold += n; s.stats.goldTotal += n; },

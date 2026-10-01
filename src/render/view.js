@@ -587,7 +587,7 @@ export class GameView {
     let spread = 0;
     for (const p of ps) spread = Math.max(spread, Math.hypot(p.x - cx, p.z - cz));
     // Arena/Boss: etwas weiter weg
-    let dist = 1 + (lv.boss || lv.arena ? 0.3 : 0) + Math.min(0.9, spread * 0.05);
+    let dist = 1 + (lv.boss || lv.arena ? 0.42 : 0) + Math.min(0.9, spread * 0.05);
     if (w.boss && !w.boss.dead && lv.boss) { // zwischen Spieler und Boss
       cx = lerp(cx, w.boss.x, 0.18); cz = lerp(cz, w.boss.z, 0.18);
     }

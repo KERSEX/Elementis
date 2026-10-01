@@ -71,7 +71,6 @@ export class Flashes {
     return m;
   }
   ring(x, y, z, r, color, dur = 0.4, o = {}) {
-    const material = mat(color, { opacity: 0.8, basic: true, add: true, side: 'double' });
     const m = this._mesh(GEO.ring, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
     m.position.set(x, y, z); m.rotation.set(0, 0, 0);
     const disc = o.disc ? this._mesh(GEO.disc, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false })) : null;

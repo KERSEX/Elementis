@@ -672,6 +672,15 @@ export class World {
     this.updateZones(dt);
     this.updatePickups(dt);
     this.updateLevel(dt);
+    // Mitspieler, der zu weit weg ist, wird nachgeholt
+    if (this.players.length > 1) {
+      const [a, b] = this.players;
+      if (a.down <= 0 && b.down <= 0) {
+        const far = Math.hypot(a.x - b.x, a.z - b.z) > 24 || Math.abs(a.y - b.y) > 14;
+        this.farT = far ? (this.farT || 0) + dt : 0;
+        if (this.farT > 2.5) { this.farT = 0; const m = b.safe || a; b.x = a.x + 1.2; b.y = a.y + 0.1; b.z = a.z; b.vx = b.vy = b.vz = 0; this.ev('puff', { x: b.x, y: b.y + 0.7, z: b.z, el: b.hero.el }); }
+      }
+    }
     // XP vergeben
     for (const p of this.players) {
       if (p.xpGain > 0) { const g = p.xpGain; p.xpGain = 0; p.xpTotal = (p.xpTotal || 0) + g; if (this.hooks.xp) this.hooks.xp(p, g); }

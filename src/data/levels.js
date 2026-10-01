@@ -186,7 +186,7 @@ const CH_BOSS = ['clear', 'nodown', 'speed'];
 // ======================================================================================
 function w1l1() {
   const b = new LevelBuilder({ id: 'w1l1', name: 'Moosklippen', world: 1, order: 1, theme: 'sky', ground: 'grass', desc: 'Grüne Inseln über den Wolken. Hier lernst du laufen, springen und kämpfen.', challenges: CH_LEVEL, par: 200 });
-  b.start(12, 12).coins(6).said('Wolkenwächter', 'Willkommen auf den Moosklippen! Springe mit der Leertaste, kämpfe mit der Maus (oder J, K und L).');
+  b.start(12, 12).coins(6).said('Wolkenwächter', 'Willkommen auf den Moosklippen! Sammle Münzen, besiege die Käfer und finde den Weg zum Portal. Die Steuerung steht im Pause-Menü.');
   b.next(8, 8, { gap: 2.4 }).trail(2).enemy('kaefer', 0, 1).coins(3);
   b.next(8, 11, { gap: 2.8 }).trail(3).mob(['kaefer', 'kaefer']).heart(2, 0).said('Wolkenwächter', 'Käfer! Greife sie mit der Maus gezielt an – sie beißen nur im Nahkampf.', 6);
   b.next(10, 10, { gap: 3, dy: 1 }).trail(3).cp().enemy('spucker', 3, 3).enemy('spucker', -3, 3).coins(4).pickup('coin5', 0, 0);

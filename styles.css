@@ -295,6 +295,6 @@ table.res td, table.res th { padding: 6px 10px; border-bottom: 1px solid rgba(25
 #touch .t-jump { right: 96px; bottom: 90px; }
 #touch .t-use { right: 150px; bottom: 150px; width: 52px; height: 52px; font-size: 18px; }
 #touch .tpause { position: absolute; right: 12px; top: 12px; width: 44px; height: 44px; border-radius: 12px; border: 2px solid rgba(255,255,255,.4); background: rgba(20,26,58,.6); color: #fff; font: 900 16px var(--font2); pointer-events: auto; }
-@media (pointer: coarse) { #hud-local { transform: scale(.8); transform-origin: top left; } #boss { top: 60px; } #story { bottom: 120px; } }
+@media (pointer: coarse) { #hud-local { transform: scale(.8); transform-origin: top left; } #boss { top: 60px; } #story { top: 76px; bottom: auto; width: min(560px, 62vw); padding: 7px 12px; } #story .txt { font-size: 13px; } #toasts { top: 24vh; } }
 
 @media (max-width: 1000px) { #boss { top: 124px; width: min(460px, 70vw); } }

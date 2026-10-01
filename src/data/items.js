@@ -64,7 +64,7 @@ export const ACHIEVEMENTS = [
   { id: 'boss_3',      icon: '🌑', name: 'Zerrax besiegt',     desc: 'Besiege den Boss der Zitadelle.',         check: (s) => s.bosses.includes('zerrax') },
   { id: 'boss_4',      icon: '🌊', name: 'Kraal besiegt',      desc: 'Besiege den Boss der Sturmküste.',        check: (s) => s.bosses.includes('kraal') },
   { id: 'star_10',     icon: '⭐', name: 'Sternensammler',     desc: 'Sammle 10 Sterne.',                       check: (s) => totalStars(s) >= 10 },
-  { id: 'star_all',    icon: '🌟', name: 'Sternenmeister',     desc: 'Sammle alle Sterne.',                     check: (s) => totalStars(s) >= 24 },
+  { id: 'star_all',    icon: '🌟', name: 'Sternenmeister',     desc: 'Sammle alle Sterne.',                     check: (s) => totalStars(s) >= 36 },
   { id: 'hero_5',      icon: '🧙', name: 'Heldentruppe',       desc: 'Schalte 5 Helden frei.',                  check: (s) => s.unlocked.length >= 5 },
   { id: 'hero_all',    icon: '🎖️', name: 'Alle Elemente',      desc: 'Schalte alle 20 Helden frei.',            check: (s) => HERO_IDS.every((h) => s.unlocked.includes(h)) },
   { id: 'lvl_10',      icon: '📈', name: 'Aufsteiger',         desc: 'Bringe einen Helden auf Stufe 10.',       check: (s) => Object.values(s.heroes).some((h) => h.lvl >= 10) },
