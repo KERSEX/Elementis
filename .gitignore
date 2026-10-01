@@ -8,3 +8,6 @@ __pycache__/
 .idea/
 Thumbs.db
 desktop.ini
+
+node_modules/
+package-lock.json

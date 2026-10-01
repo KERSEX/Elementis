@@ -64,7 +64,7 @@ canvas#game { position: fixed; inset: 0; width: 100vw; height: 100vh; display: b
 #hud-remote { position: absolute; right: 16px; top: 14px; display: flex; flex-direction: column; gap: 6px; }
 .rcard { background: var(--panel); border: 2px solid var(--line); border-radius: 12px; padding: 6px 10px; width: 190px; font: 800 13px var(--font2); }
 .rcard .bar { height: 8px; }
-#boss { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); width: min(640px, 70vw); text-align: center; }
+#boss { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); width: min(460px, 38vw); text-align: center; }
 #boss .boss-name { font: 900 20px var(--font); text-shadow: 0 2px 0 #000; color: #e2b8ff; }
 #boss .pips { font-size: 14px; letter-spacing: 2px; color: #fff; margin-left: 8px; }
 #boss .bar { height: 18px; border: 2px solid #b05cff; }
@@ -73,7 +73,7 @@ canvas#game { position: fixed; inset: 0; width: 100vw; height: 100vh; display: b
 #join-hint { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); font: 800 13px var(--font2); opacity: .7; }
 
 /* ---------------- Toasts ---------------- */
-#toasts { position: fixed; left: 50%; top: 90px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 30; pointer-events: none; }
+#toasts { position: fixed; left: 50%; top: 17vh; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 30; pointer-events: none; }
 .toast { background: var(--panel); border: 2px solid var(--line); border-radius: 14px; padding: 9px 18px; font: 800 16px var(--font2); animation: toastIn .25s ease-out; text-align: center; max-width: 80vw; }
 .toast.gold { border-color: var(--gold); color: var(--gold); }
 .toast.bad { border-color: var(--red); }
@@ -83,7 +83,7 @@ canvas#game { position: fixed; inset: 0; width: 100vw; height: 100vh; display: b
 
 /* ---------------- Screens ---------------- */
 #screens { position: fixed; inset: 0; z-index: 20; pointer-events: none; }
-.screen { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(6, 8, 22, 0.55); pointer-events: auto; animation: fadeIn .18s; padding: 16px; }
+.screen { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(6, 8, 22, 0.35); pointer-events: auto; animation: fadeIn .18s; padding: 16px; }
 .screen.clear { background: transparent; pointer-events: none; }
 .screen.clear .panel { pointer-events: auto; }
 @keyframes fadeIn { from { opacity: 0; } }
@@ -211,7 +211,7 @@ canvas#game { position: fixed; inset: 0; width: 100vw; height: 100vh; display: b
 #story .who { font: 900 16px var(--font); color: var(--gold); white-space: nowrap; }
 #story .who.villain { color: #d88bff; }
 #story .txt { font: 700 15px var(--font2); line-height: 1.4; }
-#mode-hud { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); font: 900 22px var(--font); text-shadow: 0 2px 0 #000; text-align: center; }
+#mode-hud { position: absolute; right: 16px; top: 14px; font: 900 22px var(--font); text-shadow: 0 2px 0 #000; text-align: right; }
 #mode-hud small { display: block; font: 800 14px var(--font2); opacity: .85; }
 .pcard .buff { color: var(--gold); font-size: 12px; }
 
@@ -256,3 +256,45 @@ table.res.stats td:last-child { text-align: right; color: var(--gold); }
 .stars .off { color: #3a3f5a; text-shadow: none; }
 table.res { width: 100%; border-collapse: collapse; margin: 12px 0; font: 700 14px var(--font2); }
 table.res td, table.res th { padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,.1); text-align: left; }
+
+/* ---------------- Browser-Version: Wolkenfeste, Welten, Touch ---------------- */
+.screen.right { place-items: center end; padding-right: clamp(8px, 3vw, 48px); background: linear-gradient(90deg, rgba(6,8,22,0) 25%, rgba(6,8,22,.5)); }
+.screen.right .panel.hubpanel { width: min(760px, 96vw); }
+.hubpanel .tabbody { max-height: calc(92vh - 190px); overflow: auto; padding-right: 4px; }
+.hubpanel .hgrid { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+.hubpanel .hgrid.v { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+.hubpanel .hcard { min-height: 0; }
+.hubpanel .swap { max-width: none; }
+.worlds { display: grid; gap: 12px; }
+.world { border: 3px solid color-mix(in srgb, var(--wc) 60%, transparent); border-radius: 18px; background: linear-gradient(135deg, color-mix(in srgb, var(--wc) 22%, transparent), var(--panel2) 75%); padding: 10px 14px 12px; }
+.world.locked { filter: grayscale(.9); opacity: .55; }
+.world .wh { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+.world .wi { font-size: 34px; }
+.world .wh b { font: 900 20px var(--font); display: block; }
+.world .wh small { font: 700 12px var(--font2); opacity: .85; }
+.world .wl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.world .btn.lvl { margin: 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 6px; font-size: 14px; }
+.world .btn.lvl small { font: 900 16px var(--font2); letter-spacing: 2px; }
+.world .btn.lvl.boss { border-color: #b05cff; }
+.stars span.off { color: #3a3f5a; text-shadow: none; }
+.stars.small { font-size: 30px; }
+.panel.title { max-height: 94vh; }
+@media (max-width: 900px) { .screen.right { place-items: center; padding-right: 8px; } .world .wl { grid-template-columns: 1fr; } .hubpanel .tabbody { max-height: calc(92vh - 220px); } }
+@media (max-height: 640px) { .glyph-ring { display: none; } .panel h1.logo { font-size: 40px; } .panel { padding: 14px 18px; } }
+
+#touch { position: fixed; inset: 0; z-index: 7; pointer-events: none; touch-action: none; }
+#touch .stickzone { position: absolute; left: 0; top: 30%; width: 48%; bottom: 0; pointer-events: auto; touch-action: none; }
+#touch .stick { display: none; position: fixed; width: 110px; height: 110px; border-radius: 50%; border: 3px solid rgba(255,255,255,.4); background: rgba(255,255,255,.08); }
+#touch .stick i { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px; border-radius: 50%; background: rgba(255,255,255,.45); }
+#touch .tbtns { position: absolute; right: 14px; bottom: 18px; width: 220px; height: 200px; pointer-events: none; }
+#touch .tb { position: absolute; width: 74px; height: 74px; border-radius: 50%; border: 3px solid rgba(255,255,255,.5); background: rgba(20,26,58,.55); color: #fff; font: 900 24px var(--font2); pointer-events: auto; touch-action: none; }
+#touch .tb.down { background: rgba(255,216,74,.55); }
+#touch .t-a1 { right: 0; bottom: 20px; width: 84px; height: 84px; }
+#touch .t-a2 { right: 96px; bottom: 6px; }
+#touch .t-sp { right: 6px; bottom: 116px; }
+#touch .t-jump { right: 96px; bottom: 90px; }
+#touch .t-use { right: 150px; bottom: 150px; width: 52px; height: 52px; font-size: 18px; }
+#touch .tpause { position: absolute; right: 12px; top: 12px; width: 44px; height: 44px; border-radius: 12px; border: 2px solid rgba(255,255,255,.4); background: rgba(20,26,58,.6); color: #fff; font: 900 16px var(--font2); pointer-events: auto; }
+@media (pointer: coarse) { #hud-local { transform: scale(.8); transform-origin: top left; } #boss { top: 60px; } #story { top: 76px; bottom: auto; width: min(560px, 62vw); padding: 7px 12px; } #story .txt { font-size: 13px; } #toasts { top: 24vh; } }
+
+@media (max-width: 1000px) { #boss { top: 124px; width: min(460px, 70vw); } }

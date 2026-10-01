@@ -1,0 +1,15 @@
+{
+  "name": "elementis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Elementis – Hüter der Himmelsinseln: 3D-Action-Adventure im Browser",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "python3 -m http.server 5180"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "license": "MIT"
+}
