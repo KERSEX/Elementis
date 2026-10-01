@@ -2,9 +2,11 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1024">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23141a3a' stroke='%23ffd84a' stroke-width='4'/%3E%3Cpath d='M32 10l7 16 17 2-13 11 4 17-15-9-15 9 4-17L8 28l17-2z' fill='%23ff8a2a'/%3E%3C/svg%3E">
   <title>Elementis</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <canvas id="game"></canvas>
@@ -32,7 +34,10 @@
           : 'Außerdem: Einstellungen → Allgemein → Leistung → „Empfohlene Leistungseinstellungen“ abwählen und „Hardwarebeschleunigung verwenden“ anhaken.') +
         ' Chrome, Chromium und Edge laufen meist ohne Zusatzschritte.';
       function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
-      function report(text) { try { fetch('/api/clientlog', { method: 'POST', body: String(text).slice(0, 2000) }); } catch (e) {} }
+      function report(text) {
+        // Meldet Fehler an den lokalen Spielserver (falls vorhanden). Auf statischen Seiten oder per file:// passiert nichts.
+        try { if (/^https?:$/.test(location.protocol)) fetch('api/clientlog', { method: 'POST', body: String(text).slice(0, 2000) }).catch(function () {}); } catch (e) {}
+      }
       // "Mir egal": Prüfung überspringen und trotzdem starten. Merkt sich die Wahl im Browser.
       var force = false;
       try { force = location.search.indexOf('forcegl=1') >= 0 || localStorage.getItem('elementis.forcegl') === '1'; } catch (e) {}
@@ -108,6 +113,6 @@
       }, 12000);
     })();
   </script>
-  <script type="module" src="/src/main.js"></script>
+  <script type="module" src="src/main.js"></script>
 </body>
 </html>
